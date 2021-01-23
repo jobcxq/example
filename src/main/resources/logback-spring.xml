@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+    <springProperty scope="context" name="log.appName" source="app.name"/>
+    <springProperty scope="context" name="log.level" source="log.level" defaultValue="INFO" />
+    <property name="log.maxHistory" value="10" />
+    <property name="log.filePath" value="/IdeaProjects/logs"></property>
+    <property name="log.filePrefix" value="example"></property>
+    <property name="log.pattern"
+              value="%date{yyyy-MM-dd HH:mm:ss.SSS Z} [%thread] %-5p [%c] [%F:%L] - [%X{TC}] %msg%n" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+	
+    <appender name="ALL_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.filePath}/${log.filePrefix}_info.log</file>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${log.filePath}/${log.filePrefix}_info.%d{yyyyMMdd}.%i.log
+            </FileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <MaxHistory>${log.maxHistory}</MaxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <root level="INFO" additivity="false">
+        <appender-ref ref="ALL_LOG"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
