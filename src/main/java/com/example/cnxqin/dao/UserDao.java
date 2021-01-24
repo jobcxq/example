@@ -1,11 +1,10 @@
 package com.example.cnxqin.dao;
 
 import com.example.cnxqin.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-public interface UserDao extends JpaRepository<User, Long> {
+public interface UserDao extends BaseDao<User> {
 
     @Modifying
     @Query("update User set name = ?1 where id = ?2")

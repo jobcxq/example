@@ -16,15 +16,13 @@ import java.util.Objects;
  * @date 2021/01/20 23:35
  */
 @Service
-public class UserService {
+public class UserService extends BaseService<User>{
 
     @Autowired
     private UserDao userDao;
 
-    public User saveUser(User user){
-        userDao.save(user);
-        return user;
-    }
+    @Autowired
+    RedisService redisService;
 
     @Transactional
     public int updateUser(String name){
@@ -32,16 +30,13 @@ public class UserService {
 //        return userDao.updateNameByIdNative(name,1L);
     }
 
-    @Autowired
-    RedisService redisService;
-
     public User getById(Long id){
         String key = "user_" + id;
         String value = redisService.get(key);
         if(Objects.nonNull(value)){
             return JSONObject.parseObject(value, User.class);
         }
-        User user = userDao.getOne(id);
+        User user = super.getById(id);
 
         redisService.set(key, user, 600);
         return user;
