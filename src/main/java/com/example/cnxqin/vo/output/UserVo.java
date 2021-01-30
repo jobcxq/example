@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.Objects;
+
 /**
  * @author cnxqin
  * @desc
@@ -18,7 +20,12 @@ public class UserVo {
     private Long userId;
     private String userName;
 
+    private String token;
+
     public static UserVo valueOf(User user){
+        if(Objects.isNull(user)){
+            return null;
+        }
         return UserVo.builder().build()
                 .setUserId(user.getId())
                 .setUserName(user.getName());

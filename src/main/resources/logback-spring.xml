@@ -9,13 +9,15 @@
     <property name="log.pattern"
               value="%date{yyyy-MM-dd HH:mm:ss.SSS Z} [%thread] %-5p [%c] [%F:%L] - [%X{TC}] %msg%n" />
 
+    <!--控制台日志收集-->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${log.pattern}</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
-	
+
+    <!-- 普通日志 -->
     <appender name="ALL_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.filePath}/${log.filePrefix}_info.log</file>
         <encoder>
@@ -30,11 +32,33 @@
             <totalSizeCap>5GB</totalSizeCap>
         </rollingPolicy>
     </appender>
+    <!--warning、error日志-->
+    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.filePath}/${log.filePrefix}_error.log</file>
+        <encoder>
+            <pattern>${log.pattern}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${log.filePath}/${log.filePrefix}_error.%d{yyyyMMdd}.%i.log
+            </FileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <MaxHistory>${log.maxHistory}</MaxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
 
+    <!-- spring web 日志-->
+    <logger name="org.springframework.web" level="INFO"/>
+    <!-- hibernate 日志-->
     <logger name="org.hibernate" level="INFO"/>
 
     <root level="INFO" additivity="false">
         <appender-ref ref="ALL_LOG"/>
+        <appender-ref ref="ERROR_LOG"/>
         <appender-ref ref="CONSOLE"/>
     </root>
 

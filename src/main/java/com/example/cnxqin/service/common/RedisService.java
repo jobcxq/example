@@ -91,5 +91,11 @@ public class RedisService {
         return redisTemplate.delete(key);
     }
 
+    public boolean delete(String key){
+        return redisTemplate.delete(key);
+    }
+
+
+
 
 }
