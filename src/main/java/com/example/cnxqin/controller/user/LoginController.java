@@ -1,12 +1,14 @@
 package com.example.cnxqin.controller.user;
 
-import com.example.cnxqin.common.constant.RequestConstant;
-import com.example.cnxqin.common.util.TokenUtils;
 import com.example.cnxqin.controller.BaseController;
+import com.example.cnxqin.service.user.LoginService;
+import com.example.cnxqin.vo.input.LoginInput;
 import com.example.cnxqin.vo.output.Response;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotEmpty;
 
 /**
  * @author cnxqin
@@ -17,9 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/login")
 public class LoginController extends BaseController {
 
-    @RequestMapping("/userName")
-    public Response login(@RequestParam("userName") String userName, @RequestParam("password")String password){
-        return success(TokenUtils.token(123L, userName, RequestConstant.TOKEN_SECRET));
+    @Autowired
+    private LoginService loginService;
+
+    @GetMapping("/sendVerifyCode")
+    public Response sendVerifyCode(@RequestParam @NotEmpty String phoneNo){
+        loginService.sendLoginVerifyCode(phoneNo);
+        return success();
     }
+
+    @PostMapping("byPhone")
+    public Response loginByPhone(@RequestBody @Validated LoginInput input){
+        return success(loginService.loginByPhone(input));
+    }
+
 
 }
