@@ -31,9 +31,9 @@ public class ControllerLoggerAspect {
     private static final Logger log = LoggerFactory.getLogger(ControllerLoggerAspect.class);
 
     @Pointcut(
-            "execution(* com.oriental.cherry.*.*Controller.*(..)) " +
-                    "|| execution(* com.oriental.cherry.controller.*.*Controller.*(..))" +
-                    "|| execution(* com.oriental.cherry.controller.*Controller.*(..))")
+            "execution(* com.example.cnxqin.*.*Controller.*(..)) " +
+                    "|| execution(* com.example.cnxqin.controller.*.*Controller.*(..))" +
+                    "|| execution(* com.example.cnxqin.controller.*Controller.*(..))")
     public void apiPointcut() {
     }
 
