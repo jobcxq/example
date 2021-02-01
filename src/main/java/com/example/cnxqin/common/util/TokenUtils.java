@@ -8,9 +8,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,20 +21,12 @@ public class TokenUtils {
 
     private static final Logger log = LoggerFactory.getLogger(TokenUtils.class);
 
-    //设置过期时间（秒）
-    private static final long EXPIRE_DATE = 24 * 60 * 60 * 1000;
-
-    //token秘钥
-    private static final String TOKEN_SECRET = "ZCfasfhuaUUHufguGuwu2020BQWE";
-
-    public static String token(Long userId, String account, String tokenSecret) {
+    public static String token(Long userId, String account, String tokenSecret, Date expireDate) {
 
         String token = "";
         try {
-            //过期时间
-            Date date = new Date(System.currentTimeMillis() + EXPIRE_DATE);
             //秘钥及加密算法
-            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            Algorithm algorithm = Algorithm.HMAC256(tokenSecret);
             //设置头部信息
             Map<String, Object> header = new HashMap<>();
             header.put("typ", "JWT");
@@ -47,6 +36,7 @@ public class TokenUtils {
                     .withHeader(header)
                     .withClaim("userId", userId)
                     .withClaim("account", account)
+                    .withExpiresAt(expireDate)
                     .sign(algorithm);
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,9 +51,9 @@ public class TokenUtils {
      * @param userId
      * @return
      */
-    public static boolean verify(String token, String userId){
+    public static boolean verify(String token, String userId, String tokenSecret){
         try {
-            Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
+            Algorithm algorithm = Algorithm.HMAC256(tokenSecret);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
             Claim claim = jwt.getClaim("userId");

@@ -1,6 +1,7 @@
 package com.example.cnxqin.common.aop;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.cnxqin.common.exception.BusinessException;
 import com.example.cnxqin.vo.output.Response;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -30,9 +31,9 @@ public class ControllerLoggerAspect {
     private static final Logger log = LoggerFactory.getLogger(ControllerLoggerAspect.class);
 
     @Pointcut(
-            "execution(* com.example.cnxqin.*.*Controller.*(..)) " +
-                    "|| execution(* com.example.cnxqin.controller.*.*Controller.*(..))" +
-                    "|| execution(* com.example.cnxqin.controller.*Controller.*(..))")
+            "execution(* com.oriental.cherry.*.*Controller.*(..)) " +
+                    "|| execution(* com.oriental.cherry.controller.*.*Controller.*(..))" +
+                    "|| execution(* com.oriental.cherry.controller.*Controller.*(..))")
     public void apiPointcut() {
     }
 
@@ -54,9 +55,13 @@ public class ControllerLoggerAspect {
         Response response = null;
         try {
             response = (Response)joinPoint.proceed(args);
+        }catch (BusinessException e){
+            sb.append("\n- response: ").append(System.currentTimeMillis() - start).append("ms").append(" - ").append(e.getMessage());
+            log.warn(sb.toString(), e);
+            return Response.exception(e);
         }catch (Exception e){
             log.error(sb.toString(), e);
-            throw e;
+            return Response.fail(e.getMessage());
         }
         sb.append("\n- response: ").append(System.currentTimeMillis() - start).append("ms").append(" - ");
         if(Objects.nonNull(response)){

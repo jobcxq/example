@@ -1,12 +1,16 @@
 package com.example.cnxqin.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.*;
 
 @Data
 @Entity
+@DynamicInsert
+@DynamicUpdate
 @Table(name = "USER")
 public class User implements Serializable {
 
@@ -16,6 +20,9 @@ public class User implements Serializable {
 
     @Column(name = "name",length = 50)
     private String name;
+
+    @Column(name = "phone_no",length = 50)
+    private String phoneNo;
 
     @Column
     private Integer age;

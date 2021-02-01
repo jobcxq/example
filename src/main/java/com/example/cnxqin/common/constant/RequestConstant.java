@@ -7,6 +7,8 @@ package com.example.cnxqin.common.constant;
  */
 public class RequestConstant {
 
+    public static final String IGNORE_LOGIN_CHECK = "login";
+
     public static final String REQUEST_DATA = "REQUEST_DATA";
 
     public static final String TOKEN = "Token";
@@ -31,4 +33,9 @@ public class RequestConstant {
      * token 加密秘钥
      */
     public static final String TOKEN_SECRET = "6bbc4b231e6445a0bc06007f78f126c7";
+
+    /**
+     * 设置 Token 过期时间（秒）
+     */
+    public static final Long TOKEN_EXPIRE_DATE = 24 * 60 * 60 * 1000L;
 }

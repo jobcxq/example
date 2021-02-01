@@ -28,6 +28,17 @@ public class UserAccessInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        //请求参数验签
+        if(!verifyRequestData(request)){
+            writeFailResponse(ErrorCode.PARAM_INVALID, response);
+            return false;
+        }
+
+        String requestUrl = request.getRequestURI();
+        if(requestUrl.contains(RequestConstant.IGNORE_LOGIN_CHECK)){
+            return true;
+        }
+
         String userId = request.getHeader(RequestConstant.USER_ID);
         if(StringUtils.isBlank(userId)){
             writeFailResponse(ErrorCode.USER_ID_INVALID, response);
@@ -41,17 +52,12 @@ public class UserAccessInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if(!TokenUtils.verify(token, userId)){
+        if(!TokenUtils.verify(token, userId, RequestConstant.TOKEN_SECRET)){
             writeFailResponse(ErrorCode.TOKEN_INVALID, response);
             log.warn("token verify fail, userId:{}, token:{}", userId, token);
             return false;
         }
 
-        //请求参数验签
-        if(!verifyRequestData(request)){
-            writeFailResponse(ErrorCode.PARAM_INVALID, response);
-            return false;
-        }
         return true;
     }
 

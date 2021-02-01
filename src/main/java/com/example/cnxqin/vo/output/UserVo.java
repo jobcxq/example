@@ -19,6 +19,7 @@ public class UserVo {
 
     private Long userId;
     private String userName;
+    private String phone;
 
     private String token;
 
@@ -28,6 +29,7 @@ public class UserVo {
         }
         return UserVo.builder().build()
                 .setUserId(user.getId())
+                .setPhone(user.getPhoneNo())
                 .setUserName(user.getName());
     }
 }

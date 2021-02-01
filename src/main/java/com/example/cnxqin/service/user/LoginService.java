@@ -6,6 +6,8 @@ import com.example.cnxqin.common.constant.TimeConstant;
 import com.example.cnxqin.common.exception.BusinessException;
 import com.example.cnxqin.common.exception.ErrorCode;
 import com.example.cnxqin.common.util.TokenUtils;
+import com.example.cnxqin.dao.UserDao;
+import com.example.cnxqin.entity.User;
 import com.example.cnxqin.service.common.RedisService;
 import com.example.cnxqin.vo.input.LoginInput;
 import com.example.cnxqin.vo.output.UserVo;
@@ -14,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * @author cnxqin
@@ -27,6 +31,9 @@ public class LoginService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private UserDao userDao;
 
     /**
      * 发送验证码
@@ -70,10 +77,15 @@ public class LoginService {
 
         redisService.delete(key);
 
-        String token = TokenUtils.token(123L, input.getPhoneNo(), RequestConstant.TOKEN_SECRET);
+        User user = new User();
+        user.setPhoneNo(input.getPhoneNo());
+        userDao.save(user);
+
+        Date expireDate = new Date(System.currentTimeMillis() + RequestConstant.TOKEN_EXPIRE_DATE);
+        String token = TokenUtils.token(user.getId(), input.getPhoneNo(), RequestConstant.TOKEN_SECRET, expireDate);
 
         //保存用户信息
-        UserVo userVo = UserVo.builder().build().setUserId(123L).setUserName("哈哈哈").setToken(token);
+        UserVo userVo = UserVo.valueOf(user).setToken(token);
         return userVo;
     }
 }
