@@ -3,6 +3,7 @@ package com.example.cnxqin.common.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,13 +58,18 @@ public class TokenUtils {
     /**
      * 验证token，通过返回true
      * @param token
+     * @param userId
      * @return
      */
-    public static boolean verify(String token){
+    public static boolean verify(String token, String userId){
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
+            Claim claim = jwt.getClaim("userId");
+            if(!claim.asLong().equals(new Long(userId))){
+                return false;
+            }
             return true;
         }catch (Exception e){
             log.warn("token 校验失败，toke:{}", token, e);

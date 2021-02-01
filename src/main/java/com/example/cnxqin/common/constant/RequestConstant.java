@@ -15,6 +15,8 @@ public class RequestConstant {
 
     public static final String SIGN = "SIGN";
 
+    public static final String REGULAR_PHONE_NO = "^1[0-9]{10}$";
+
     /**
      * 请求参数加密 KEY
      */

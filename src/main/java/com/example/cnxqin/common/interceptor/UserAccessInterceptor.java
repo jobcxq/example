@@ -41,8 +41,9 @@ public class UserAccessInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if(!TokenUtils.verify(token)){
+        if(!TokenUtils.verify(token, userId)){
             writeFailResponse(ErrorCode.TOKEN_INVALID, response);
+            log.warn("token verify fail, userId:{}, token:{}", userId, token);
             return false;
         }
 
