@@ -4,7 +4,7 @@
     <springProperty scope="context" name="log.appName" source="app.name"/>
     <springProperty scope="context" name="log.level" source="log.level" defaultValue="INFO" />
     <property name="log.maxHistory" value="10" />
-    <property name="log.filePath" value="/IdeaProjects/logs"></property>
+    <property name="log.filePath" value="logs"></property>
     <property name="log.filePrefix" value="example"></property>
     <property name="log.pattern"
               value="%date{yyyy-MM-dd HH:mm:ss.SSS Z} [%thread] %-5p [%c] [%F:%L] - [%X{TC}] %msg%n" />
